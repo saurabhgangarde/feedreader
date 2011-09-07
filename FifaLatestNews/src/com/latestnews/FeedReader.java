@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.latestnews.adapter.FeedListAdapter;
 import com.latestnews.cache.ImageLoader;
@@ -15,15 +16,15 @@ import com.latestnews.model.FeedItem;
 import com.latestnews.parser.FeedParser;
 import com.latestnews.service.ApacheHttpService;
 import com.latestnews.service.IFeedService;
+import com.latestnews.service.ServerFeedServiceImpl;
 import com.latestnews.service.mock.DummyFeedServiceImpl;
 
 public class FeedReader extends ListActivity {
-	
+
 	/**
-	 * Image Loader used by this activity 
+	 * Image Loader used by this activity
 	 */
 	private ImageLoader imageLoader = null;
-	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -36,7 +37,7 @@ public class FeedReader extends ListActivity {
 		imageLoader.setHttpService(new ApacheHttpService());
 
 		// TODO replace with ServerFeedServiceImpl
-		final IFeedService feedService = new DummyFeedServiceImpl();
+		final IFeedService feedService = new ServerFeedServiceImpl();
 		feedService.setHttpService(new ApacheHttpService());
 		feedService.setFeedParser(new FeedParser());
 
@@ -75,9 +76,13 @@ public class FeedReader extends ListActivity {
 				if (progressDialog.isShowing()) {
 					progressDialog.hide();
 				}
-				
-				setListAdapter(new FeedListAdapter(getApplicationContext(),
-						feeds, imageLoader));
+				if (null != feeds) {
+					setListAdapter(new FeedListAdapter(getApplicationContext(),
+							feeds, imageLoader));
+				}
+				else{
+					Toast.makeText(getApplicationContext(), "No Data to display", Toast.LENGTH_LONG);
+				}
 
 			}
 
