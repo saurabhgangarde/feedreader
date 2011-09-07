@@ -36,9 +36,10 @@ public class FeedParser implements IFeedParser {
 		try {
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
+			
 
 			XMLReader xr = sp.getXMLReader();
-
+			//xr.setFeature(arg0, arg1)
 			FeedItemHandler feedDataHandler = new FeedItemHandler();
 			xr.setContentHandler(feedDataHandler);
 
