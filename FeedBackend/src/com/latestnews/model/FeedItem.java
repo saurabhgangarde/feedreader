@@ -18,6 +18,15 @@ public class FeedItem {
 	 */
 	private String title;
 
+	
+	
+	/**
+	 * 
+	 */
+	public FeedItem() {
+		super();
+	}
+
 	/**
 	 * @param enclosure
 	 * @param title

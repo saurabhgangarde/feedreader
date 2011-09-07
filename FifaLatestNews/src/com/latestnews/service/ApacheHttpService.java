@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -23,15 +24,37 @@ import android.util.Log;
 public class ApacheHttpService implements IHttpService {
 
 	/* (non-Javadoc)
+	 * @see com.latestnews.service.IHttpService#fetchResponse(java.lang.String)
+	 */
+	public InputStream fetchResponse(String url) {
+		InputStream is= null;
+		HttpClient client = new DefaultHttpClient();
+		HttpGet getRequest = new HttpGet(url);
+		getRequest.setHeader("Accept-Encoding", "gzip,deflate,sdch");
+		try {
+			HttpResponse response = client.execute(getRequest);
+			
+			is =  response.getEntity().getContent();
+		} catch (ClientProtocolException e) {
+			Log.d("FifaLatestNews", "Got Exception while reading "+url+" :"+e.getMessage());
+		} catch (IOException e) {
+			Log.d("FifaLatestNews", "Got Exception while reading "+url+" :"+e.getMessage());
+		}
+		return is;
+	}
+	
+	/* (non-Javadoc)
 	 * @see com.latestnews.service.IHttpService#fetchXMLResponse(java.lang.String)
 	 */
 	public String fetchXMLResponse(String url) {
 		String xmlData= null;
 		HttpClient client = new DefaultHttpClient();
 		HttpGet getRequest = new HttpGet(url);
+		getRequest.setHeader("Accept-Encoding", "gzip,deflate,sdch");
 		try {
 			HttpResponse response = client.execute(getRequest);
-			xmlData = convertStreamToString(response.getEntity().getContent());
+			
+			xmlData = convertStreamToString(new GZIPInputStream(response.getEntity().getContent()));
 		} catch (ClientProtocolException e) {
 			Log.d("FifaLatestNews", "Got Exception while reading "+url+" :"+e.getMessage());
 		} catch (IOException e) {
