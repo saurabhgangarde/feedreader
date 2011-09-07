@@ -25,7 +25,7 @@ public class DummyHttpService implements IHttpService {
 	 * com.latestnews.service.IHttpService#fetchXMLResponse(java.lang.String)
 	 */
 	@Override
-	public String fetchXMLResponse(String url) {
+	public String fetchGZIPXMLResponse(String url) {
 
 		return dummyData;
 	}

@@ -136,7 +136,7 @@ public class QueuedImageLoader implements ImageLoader {
 
 		} catch (Exception ex) {
 			Log.d("FifaLatestNews",
-					"Caught Exception while reading bitmap from url " + url);
+					"Caught Exception while reading bitmap from url " + url +" "+ex);
 
 		}
 		return bitmap;

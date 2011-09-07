@@ -17,7 +17,7 @@ public interface IHttpService {
 	 * @param url The url to read xml from
 	 * @return String if able to read data, else returns null
 	 */
-	public String fetchXMLResponse(String url);
+	public String fetchGZIPXMLResponse(String url);
 	
 	
 	/**
