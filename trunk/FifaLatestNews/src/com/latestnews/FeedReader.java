@@ -8,6 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.latestnews.adapter.FeedListAdapter;
+import com.latestnews.cache.ImageLoader;
+import com.latestnews.cache.InMemoryUnlimitedImageCache;
+import com.latestnews.cache.QueuedImageLoader;
 import com.latestnews.model.FeedItem;
 import com.latestnews.parser.FeedParser;
 import com.latestnews.service.ApacheHttpService;
@@ -15,11 +18,21 @@ import com.latestnews.service.IFeedService;
 import com.latestnews.service.mock.DummyFeedServiceImpl;
 
 public class FeedReader extends ListActivity {
+	
+	/**
+	 * Image Loader used by this activity 
+	 */
+	private ImageLoader imageLoader = null;
+	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		imageLoader = new QueuedImageLoader();
+		imageLoader.setImageCache(new InMemoryUnlimitedImageCache());
 
 		// TODO replace with ServerFeedServiceImpl
 		final IFeedService feedService = new DummyFeedServiceImpl();
@@ -62,7 +75,7 @@ public class FeedReader extends ListActivity {
 					progressDialog.hide();
 				}
 				setListAdapter(new FeedListAdapter(getApplicationContext(),
-						feeds));
+						feeds, imageLoader));
 
 			}
 

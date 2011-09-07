@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.latestnews.R;
+import com.latestnews.cache.ImageLoader;
 import com.latestnews.model.FeedItem;
 
 /**
@@ -27,11 +28,13 @@ public class FeedListAdapter extends BaseAdapter {
 	private List<FeedItem> feeds;
 	private Context context;
 	private LayoutInflater inflater;
+	private ImageLoader imageLoader = null;
 	
-	public FeedListAdapter(Context context, List<FeedItem> feeds){
+	public FeedListAdapter(Context context, List<FeedItem> feeds, ImageLoader imageLoader){
 		this.context= context;
 		this.feeds=feeds;
 		this.inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.imageLoader=imageLoader;
 	}
 	/* (non-Javadoc)
 	 * @see android.widget.Adapter#getCount()
@@ -65,13 +68,14 @@ public class FeedListAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.fifafeedentry, null);
 		}
 		FeedItem item = (FeedItem)getItem(position);
-		ImageView imageview = (ImageView)convertView.findViewById(R.id.image);
+		ImageView imageView = (ImageView)convertView.findViewById(R.id.image);
 		TextView textView = (TextView)convertView.findViewById(R.id.title); 
 
 		Log.d(FeedListAdapter.class.getName(),"Title "+item.getTitle());
 		textView.setText(item.getTitle());
 		
-		//TODO Use Threading/AsyncTask/CacheManager to set the Image
+		//Using a queue and background running thread to load images in sequential manner
+		imageLoader.queueImage(item.getEnclosure(), imageView);
 		
 		return convertView;
 	}
