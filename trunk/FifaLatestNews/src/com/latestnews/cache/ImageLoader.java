@@ -3,6 +3,8 @@
  */
 package com.latestnews.cache;
 
+import com.latestnews.service.IHttpService;
+
 import android.widget.ImageView;
 
 /**
@@ -21,6 +23,12 @@ public interface ImageLoader {
 	 */
 	public void setImageCache(ImageCache imageCache);
 
+	
+	/**
+	 * Set the Http Service to be used to fetch images
+	 * @param httpService
+	 */
+	public void setHttpService(IHttpService httpService);
 	/**
 	 * Queue up Image for Loading in given imageView
 	 * 
@@ -30,5 +38,8 @@ public interface ImageLoader {
 	 *            The ImageView in which the image has to be displayed
 	 */
 	public void queueImage(String url, ImageView imageView);
+	
+	
+	
 
 }

@@ -3,6 +3,8 @@
  */
 package com.latestnews.service;
 
+import java.io.InputStream;
+
 /**
  * HttpService (platform independent) to fetch XML feed from a URL
  * @author rohit
@@ -18,5 +20,11 @@ public interface IHttpService {
 	public String fetchXMLResponse(String url);
 	
 	
+	/**
+	 * 
+	 * @param url Load resource from URL
+	 * @return InputStream for the given URL
+	 */
+	public InputStream fetchResponse(String url);
 	
 }

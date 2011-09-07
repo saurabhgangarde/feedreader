@@ -4,8 +4,9 @@
 package com.latestnews.cache;
 
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -13,6 +14,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.latestnews.R;
+import com.latestnews.service.IHttpService;
+
+
 
 /**
  * Loads the Images Queued in this class 
@@ -22,6 +28,10 @@ import android.widget.ImageView;
 public class QueuedImageLoader implements ImageLoader {
 
 	/**
+	 * Http Service to load inputstream of imate
+	 */
+	private IHttpService httpService = null;
+	/**
 	 * Delegating caching to Image Cache
 	 */
 	private ImageCache imageCache = null;
@@ -30,6 +40,11 @@ public class QueuedImageLoader implements ImageLoader {
 	 */
 	private BlockingQueue<PhotoToLoad> photoQueue = new LinkedBlockingQueue<PhotoToLoad>();
 
+	/**
+	 * Map for image url and its matching image view
+	 */
+	private final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
+	
 	/**
 	 * Default Constructor. Also starts the thread which polls the queue to
 	 * fetch the image
@@ -47,14 +62,19 @@ public class QueuedImageLoader implements ImageLoader {
 						Log.d("FifaLatestNews", "Loaded "+photoToLoadTask );
 						final Bitmap bitmap = getBitmap(photoToLoadTask
 								.getUrl());
-						photoToLoadTask.getImageView().post(new Runnable() {
+						imageCache.cache(photoToLoadTask.getUrl(),bitmap);
+						String url = imageViews.get(photoToLoadTask.getImageView());
+						if ( url != null && url.equals(photoToLoadTask.getUrl()) )
+						{
+							photoToLoadTask.getImageView().post(new Runnable() {
 
-							public void run() {
-								photoToLoadTask.getImageView().setImageBitmap(
-										bitmap);
+								public void run()
+								{
+									photoToLoadTask.getImageView().setImageBitmap(bitmap);
 
-							}
-						});
+								}
+							});
+						}
 
 					}
 				} catch (InterruptedException iex) {
@@ -78,18 +98,17 @@ public class QueuedImageLoader implements ImageLoader {
 	 */
 	public void queueImage(final String url, final ImageView imageView) {
 		// FIXME we are not checking for null for imagecache here
+
 		final Bitmap cachedBitMap = imageCache.get(url);
-		if (null != cachedBitMap) {
-			// Use UI thread to set the Image on Image View
-			imageView.post(new Runnable() {
-
-				public void run() {
-					imageView.setImageBitmap(cachedBitMap);
-
-				}
-			});
-		} else {
+		imageViews.put(imageView, url);
+		if ( null != cachedBitMap )
+		{
+			imageView.setImageBitmap(cachedBitMap);
+		}
+		else
+		{
 			photoQueue.add(new PhotoToLoad(url, imageView));
+			imageView.setImageResource(R.drawable.icon);
 		}
 
 	}
@@ -108,12 +127,8 @@ public class QueuedImageLoader implements ImageLoader {
 		Bitmap bitmap = null;
 		try {
 
-			URL imageUrl = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection) imageUrl
-					.openConnection();
-			conn.setConnectTimeout(30000);
-			conn.setReadTimeout(30000);
-			InputStream is = conn.getInputStream();
+			
+			InputStream is = httpService.fetchResponse(url);
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inSampleSize = 3;
 			return BitmapFactory.decodeStream(is, null,
@@ -126,5 +141,14 @@ public class QueuedImageLoader implements ImageLoader {
 		}
 		return bitmap;
 	}
+
+	public void setHttpService(IHttpService httpService) {
+		this.httpService=httpService;
+		
+	}
+
+	
+
+	
 
 }

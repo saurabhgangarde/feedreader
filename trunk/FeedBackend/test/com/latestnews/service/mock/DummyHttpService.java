@@ -3,6 +3,10 @@
  */
 package com.latestnews.service.mock;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 import com.latestnews.service.IHttpService;
 
 /**
@@ -24,6 +28,18 @@ public class DummyHttpService implements IHttpService {
 	public String fetchXMLResponse(String url) {
 
 		return dummyData;
+	}
+
+	@Override
+	public InputStream fetchResponse(String url) {
+		InputStream is = null;
+		try {
+			is =   new ByteArrayInputStream(dummyData.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return is;
 	}
 
 }
