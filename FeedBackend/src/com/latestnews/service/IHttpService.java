@@ -16,4 +16,7 @@ public interface IHttpService {
 	 * @return String if able to read data, else returns null
 	 */
 	public String fetchXMLResponse(String url);
+	
+	
+	
 }
