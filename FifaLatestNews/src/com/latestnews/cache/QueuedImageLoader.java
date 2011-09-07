@@ -108,7 +108,7 @@ public class QueuedImageLoader implements ImageLoader {
 		else
 		{
 			photoQueue.add(new PhotoToLoad(url, imageView));
-			imageView.setImageResource(R.drawable.icon);
+			imageView.setImageResource(R.drawable.loading);
 		}
 
 	}
