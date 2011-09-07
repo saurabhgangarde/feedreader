@@ -2,6 +2,7 @@ package com.latestnews;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -81,7 +82,8 @@ public class FeedReader extends ListActivity {
 							feeds, imageLoader));
 				}
 				else{
-					Toast.makeText(getApplicationContext(), "No Data to display", Toast.LENGTH_LONG);
+					AlertDialog.Builder builder = new AlertDialog.Builder(FeedReader.this);
+					builder.setTitle("Unable to load feed").setMessage("Unable to Load RSS Feed").create().show();
 				}
 
 			}
@@ -89,6 +91,7 @@ public class FeedReader extends ListActivity {
 		};
 
 		asyncTask.execute("http://www.fifa.com/newscentre/photo/rss.xml");
+		//asyncTask.execute("http://www.fifa.com/u20worldcup/news/rss.xml");
 
 	}
 }
