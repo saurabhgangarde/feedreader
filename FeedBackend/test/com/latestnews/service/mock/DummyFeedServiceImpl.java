@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.latestnews.model.FeedItem;
+import com.latestnews.parser.IFeedParser;
 import com.latestnews.service.IFeedService;
+import com.latestnews.service.IHttpService;
 
 /**
  * @author rohit
@@ -21,6 +23,15 @@ public class DummyFeedServiceImpl implements IFeedService {
 	 * @see com.latestnews.service.FeedService#fetchLatestFeeds()
 	 */
 	public List<FeedItem> fetchLatestFeeds() {
+		
+		//Simulate a server delay
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			
+			//Ignore this
+		}
+		
 		List<FeedItem> feedList = new ArrayList<FeedItem>();
 
 		feedList.add(new FeedItem(
@@ -109,5 +120,17 @@ public class DummyFeedServiceImpl implements IFeedService {
 				"Title28"));
 
 		return feedList;
+	}
+
+	@Override
+	public void setHttpService(IHttpService httpServer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFeedParser(IFeedParser feedParser) {
+		// TODO Auto-generated method stub
+		
 	}
 }
