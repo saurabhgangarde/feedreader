@@ -32,7 +32,7 @@ public class ServerFeedServiceImpl implements IFeedService {
 	 */
 	@Override
 	public List<FeedItem> fetchLatestFeeds() {
-		String data= httpService.fetchXMLResponse(URL);
+		String data= httpService.fetchGZIPXMLResponse(URL);
 		System.out.println("FifaLatestNews : XML Data = "+data);
 		
 		return  feedParser.parseNewsFeed(data);

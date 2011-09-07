@@ -30,7 +30,6 @@ public class ApacheHttpService implements IHttpService {
 		InputStream is= null;
 		HttpClient client = new DefaultHttpClient();
 		HttpGet getRequest = new HttpGet(url);
-		getRequest.setHeader("Accept-Encoding", "gzip,deflate,sdch");
 		try {
 			HttpResponse response = client.execute(getRequest);
 			
@@ -46,7 +45,7 @@ public class ApacheHttpService implements IHttpService {
 	/* (non-Javadoc)
 	 * @see com.latestnews.service.IHttpService#fetchXMLResponse(java.lang.String)
 	 */
-	public String fetchXMLResponse(String url) {
+	public String fetchGZIPXMLResponse(String url) {
 		String xmlData= null;
 		HttpClient client = new DefaultHttpClient();
 		HttpGet getRequest = new HttpGet(url);

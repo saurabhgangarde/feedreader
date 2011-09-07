@@ -15,7 +15,7 @@ import com.latestnews.model.FeedItem;
 import com.latestnews.parser.FeedParser;
 import com.latestnews.service.ApacheHttpService;
 import com.latestnews.service.IFeedService;
-import com.latestnews.service.ServerFeedServiceImpl;
+import com.latestnews.service.mock.DummyFeedServiceImpl;
 
 public class FeedReader extends ListActivity {
 	
@@ -33,9 +33,10 @@ public class FeedReader extends ListActivity {
 
 		imageLoader = new QueuedImageLoader();
 		imageLoader.setImageCache(new InMemoryUnlimitedImageCache());
+		imageLoader.setHttpService(new ApacheHttpService());
 
 		// TODO replace with ServerFeedServiceImpl
-		final IFeedService feedService = new ServerFeedServiceImpl();
+		final IFeedService feedService = new DummyFeedServiceImpl();
 		feedService.setHttpService(new ApacheHttpService());
 		feedService.setFeedParser(new FeedParser());
 
