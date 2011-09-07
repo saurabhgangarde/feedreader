@@ -3,8 +3,10 @@
  */
 package com.latestnews.parser;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,32 +32,13 @@ public class FeedParser implements IFeedParser {
 	 */
 	@Override
 	public List<FeedItem> parseNewsFeed(String data) {
-		List<FeedItem> feedItems = null;
-
-		// sax stuff
+		List<FeedItem> result = null;
 		try {
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			SAXParser sp = spf.newSAXParser();
-			
-
-			XMLReader xr = sp.getXMLReader();
-			//xr.setFeature(arg0, arg1)
-			FeedItemHandler feedDataHandler = new FeedItemHandler();
-			xr.setContentHandler(feedDataHandler);
-
-			xr.parse(data);
-
-			feedItems = feedDataHandler.getFeedItem();
-
-		} catch (ParserConfigurationException pce) {
-			System.out.println("sax parse error"+ pce);
-		} catch (SAXException se) {
-			System.out.println("sax error"+ se);
-		} catch (IOException ioe) {
-			System.out.println("sax parse io error"+ ioe);
+			result =  parseNewsFeed(new ByteArrayInputStream(data.getBytes("UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Caught Exception parsing News Feed Data in UTF-8");
 		}
-
-		return feedItems;
+		return result;
 	}
 
 	/**
