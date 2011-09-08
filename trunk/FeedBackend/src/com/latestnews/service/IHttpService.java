@@ -27,4 +27,11 @@ public interface IHttpService {
 	 */
 	public InputStream fetchResponse(String url);
 	
+	/**
+	 * 
+	 * @param url Load resource from URL
+	 * @return GZip InputStream for the given URL
+	 */
+	public InputStream fetchGZIPResponse(String url);
+	
 }

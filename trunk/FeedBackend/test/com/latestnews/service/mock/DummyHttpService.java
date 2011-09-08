@@ -42,4 +42,10 @@ public class DummyHttpService implements IHttpService {
 		return is;
 	}
 
+	@Override
+	public InputStream fetchGZIPResponse(String url) {
+		//FIXME To be implemented
+		return null;
+	}
+
 }
