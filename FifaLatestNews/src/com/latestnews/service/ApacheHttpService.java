@@ -43,6 +43,25 @@ public class ApacheHttpService implements IHttpService {
 	}
 	
 	/* (non-Javadoc)
+	 * @see com.latestnews.service.IHttpService#fetchGZIPResponse(java.lang.String)
+	 */
+	public InputStream fetchGZIPResponse(String url) {
+		InputStream is= null;
+		HttpClient client = new DefaultHttpClient();
+		HttpGet getRequest = new HttpGet(url);
+		try {
+			HttpResponse response = client.execute(getRequest);
+			getRequest.setHeader("Accept-Encoding", "gzip,deflate,sdch");
+			is =  response.getEntity().getContent();
+		} catch (ClientProtocolException e) {
+			Log.d("FifaLatestNews", "Got Exception while reading "+url+" :"+e.getMessage());
+		} catch (IOException e) {
+			Log.d("FifaLatestNews", "Got Exception while reading "+url+" :"+e.getMessage());
+		}
+		return is;
+	}
+	
+	/* (non-Javadoc)
 	 * @see com.latestnews.service.IHttpService#fetchXMLResponse(java.lang.String)
 	 */
 	public String fetchGZIPXMLResponse(String url) {
